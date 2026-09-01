@@ -6,7 +6,7 @@ import { lstat, mkdir, open, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { loadVoiceflowToken } from "./credentials.mjs";
+import { loadAudioflowToken } from "./credentials.mjs";
 
 const API_ORIGIN = "https://asr.audioflow123.com";
 const SPEECH_PATH = "/v1/audio/speech";
@@ -21,7 +21,7 @@ const RESULT_HOSTS = new Set([
 
 function printHelp() {
   process.stdout.write(
-    "Read text aloud with VoiceFlow TTS\n\n" +
+    "Read text aloud with AudioFlow TTS\n\n" +
       "Usage:\n" +
       "  printf 'Hello' | node read-aloud.mjs [--speed <0.5-2.0>] [--output </absolute/file.mp3>]\n\n" +
       "Text is read from standard input so it is not exposed in process arguments.\n",
@@ -84,7 +84,7 @@ function validateText(text) {
 async function readBoundedJson(response) {
   const text = await response.text();
   if (Buffer.byteLength(text, "utf8") > MAXIMUM_RESPONSE_BYTES) {
-    throw new Error("The VoiceFlow TTS response was too large.");
+    throw new Error("The AudioFlow TTS response was too large.");
   }
   try {
     const value = JSON.parse(text);
@@ -93,7 +93,7 @@ async function readBoundedJson(response) {
     }
     return value;
   } catch {
-    throw new Error("The VoiceFlow TTS response was invalid.");
+    throw new Error("The AudioFlow TTS response was invalid.");
   }
 }
 
@@ -116,19 +116,19 @@ function parseSpeechResponse(body) {
     body.usage.characters <= 0 ||
     typeof body.url !== "string"
   ) {
-    throw new Error("The VoiceFlow TTS response was invalid.");
+    throw new Error("The AudioFlow TTS response was invalid.");
   }
   if (
     (body.language === "zh" && body.voice !== "longanlingxin") ||
     (body.language === "en" && body.voice !== "longanlufeng")
   ) {
-    throw new Error("The VoiceFlow TTS response was invalid.");
+    throw new Error("The AudioFlow TTS response was invalid.");
   }
   let audioUrl;
   try {
     audioUrl = new URL(body.url);
   } catch {
-    throw new Error("The VoiceFlow TTS response was invalid.");
+    throw new Error("The AudioFlow TTS response was invalid.");
   }
   if (
     audioUrl.protocol !== "https:" ||
@@ -138,7 +138,7 @@ function parseSpeechResponse(body) {
     audioUrl.port !== "" ||
     audioUrl.hash !== ""
   ) {
-    throw new Error("The VoiceFlow TTS response was invalid.");
+    throw new Error("The AudioFlow TTS response was invalid.");
   }
   return Object.freeze({
     audioUrl,
@@ -244,10 +244,10 @@ export async function synthesizeAndDownload(
       }
     }
   }
-  const configured = await loadVoiceflowToken(credentialOptions);
+  const configured = await loadAudioflowToken(credentialOptions);
   if (configured === null) {
     throw new Error(
-      "VoiceFlow is not connected. Run `node scripts/auth.mjs begin` first.",
+      "AudioFlow is not connected. Run `node scripts/auth.mjs begin` first.",
     );
   }
   let response;
@@ -263,12 +263,12 @@ export async function synthesizeAndDownload(
       signal: requestSignal,
     });
   } catch {
-    throw new Error("The VoiceFlow TTS request failed.");
+    throw new Error("The AudioFlow TTS request failed.");
   }
   const body = await readBoundedJson(response);
   if (response.status !== 200) {
     throw new Error(
-      `VoiceFlow TTS failed (HTTP ${response.status}, ${safeErrorCode(body)}).`,
+      `AudioFlow TTS failed (HTTP ${response.status}, ${safeErrorCode(body)}).`,
     );
   }
   const speech = parseSpeechResponse(body);

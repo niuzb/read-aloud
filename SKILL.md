@@ -1,17 +1,17 @@
 ---
 name: read-aloud
-description: Turn user-provided text into a playable MP3 with VoiceFlow TTS. Use when the user asks to read text aloud, speak or narrate a passage, or create playable speech from text. Do not use for transcription, translation, or audio editing unless separately requested.
+description: Turn user-provided text into a playable MP3 with AudioFlow TTS. Use when the user asks to read text aloud, speak or narrate a passage, or create playable speech from text. Do not use for transcription, translation, or audio editing unless separately requested.
 allowed-tools: Read,Write,Bash
 metadata:
   openclaw:
     requires:
       bins: [node]
-    primaryEnv: VOICEFLOW_TOKEN
+    primaryEnv: AUDIOFLOW_TOKEN
     envVars:
-      - name: VOICEFLOW_TOKEN
+      - name: AUDIOFLOW_TOKEN
         required: false
-        description: Optional VoiceFlow user API token; browser authorization obtains one when absent.
-      - name: VOICEFLOW_CONFIG_DIR
+        description: Optional AudioFlow user API token; browser authorization obtains one when absent.
+      - name: AUDIOFLOW_CONFIG_DIR
         required: false
         description: Optional absolute credential directory; defaults to the user configuration directory.
     emoji: "🔊"
@@ -24,23 +24,36 @@ that local file playable in the host application. Do not rewrite, correct,
 translate, summarize, or otherwise change the text unless the user separately
 asks for that transformation before synthesis.
 
+## Prerequisites
+
+Before using this skill, the user must:
+
+1. create an account on the
+   [AudioFlow sign-up page](https://audioflow123.com/signup); and
+2. add prepaid credit on the
+   [AudioFlow billing page](https://audioflow123.com/dashboard/billing).
+
+If either prerequisite is incomplete, direct the user to the relevant page and
+stop before authorization or synthesis. Do not request or handle their account
+password or payment credentials.
+
 ## Require explicit approval
 
 Before every synthesis, tell the user that:
 
-- the text will be sent over HTTPS to the VoiceFlow TTS service at
+- the text will be sent over HTTPS to the AudioFlow TTS service at
   `https://asr.audioflow123.com`;
-- the VoiceFlow token is sent only to the VoiceFlow TTS API, never to the
+- the AudioFlow token is sent only to the AudioFlow TTS API, never to the
   signed audio URL;
 - the generated MP3 will be downloaded from that signed HTTPS URL to a private
   local temporary file; and
-- VoiceFlow charges `$0.70 per 10,000` API-reported billable characters.
+- AudioFlow charges `$0.70 per 10,000` API-reported billable characters.
 
 Ask a direct yes-or-no question. A request to read text aloud describes the
 desired result but is not approval for remote processing or billing. Do not run
 the synthesis command unless the user explicitly agrees for that request.
 
-## Connect to VoiceFlow
+## Connect to AudioFlow
 
 Resolve the directory containing this `SKILL.md` as `{baseDir}`. Check the
 connection without printing the full token:
@@ -64,12 +77,12 @@ approval, run:
 node "{baseDir}/scripts/auth.mjs" wait
 ```
 
-The full `vf_stt_` token is generated and stored locally with private
-permissions. An existing `VOICEFLOW_TOKEN` environment variable takes
+The full AudioFlow API token is generated and stored locally with private
+permissions. An existing `AUDIOFLOW_TOKEN` environment variable takes
 precedence. Never echo or log the token, place it in command arguments, or write
 it to the repository. For an invalid token, start authorization again. For
 revocation or prepaid balance, direct the user to the
-[VoiceFlow dashboard](https://audioflow123.com/dashboard).
+[AudioFlow dashboard](https://audioflow123.com/dashboard).
 
 ## Synthesize
 
@@ -123,5 +136,6 @@ diagnostics.
 
 ## Version
 
-Version 1.0.0: synthesize approved text through VoiceFlow TTS and return a
-private, playable MP3 with automatic Chinese or English voice routing.
+Version 1.0.1: use AudioFlow branding, require account registration and prepaid
+credit, and return a private, playable MP3 with automatic Chinese or English
+voice routing.

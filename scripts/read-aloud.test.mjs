@@ -12,8 +12,8 @@ const AUDIO_URL =
 function credentialOptions(root) {
   return {
     environment: {
-      VOICEFLOW_CONFIG_DIR: root,
-      VOICEFLOW_TOKEN: TOKEN,
+      AUDIOFLOW_CONFIG_DIR: root,
+      AUDIOFLOW_TOKEN: TOKEN,
     },
     platform: process.platform,
     homeDirectory: root,
