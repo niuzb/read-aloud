@@ -28,13 +28,13 @@ asks for that transformation before synthesis.
 
 Before every synthesis, tell the user that:
 
-- the text will be sent over HTTPS to the VoiceFlow API at
-  `https://asr.audioflow123.com` and to VoiceFlow's Alibaba Cloud TTS provider;
-- the VoiceFlow token is sent only to the VoiceFlow API, never to the
-  provider-issued signed audio URL;
+- the text will be sent over HTTPS to the VoiceFlow TTS service at
+  `https://asr.audioflow123.com`;
+- the VoiceFlow token is sent only to the VoiceFlow TTS API, never to the
+  signed audio URL;
 - the generated MP3 will be downloaded from that signed HTTPS URL to a private
   local temporary file; and
-- VoiceFlow charges `$0.70 per 10,000` provider-reported billable characters.
+- VoiceFlow charges `$0.70 per 10,000` API-reported billable characters.
 
 Ask a direct yes-or-no question. A request to read text aloud describes the
 desired result but is not approval for remote processing or billing. Do not run
@@ -90,13 +90,13 @@ interpolate untrusted text into a shell command. Use `--output
 file; the command refuses to overwrite an existing file.
 
 The TTS POST is intentionally attempted once. Never retry it automatically,
-because an uncertain response may already have incurred provider cost.
+because an uncertain response may already have incurred a TTS charge.
 
 ## Play the result
 
 On success, the command prints JSON containing only the private local MP3 path,
 format, language category, selected voice, billed character count, and expiry.
-It never prints the provider URL or its signed query parameters.
+It never prints the signed audio URL or its query parameters.
 
 Use the host application's audio attachment or media rendering capability to
 play the returned absolute MP3 path. If the host cannot render audio, provide
@@ -118,7 +118,7 @@ upload it, or retain the input text separately unless the user asks.
 - Unsupported writing systems or invalid input: return the API error without
   changing or translating the text.
 
-Never include the input text, token, provider URL, or signed query parameters in
+Never include the input text, token, signed audio URL, or query parameters in
 diagnostics.
 
 ## Version

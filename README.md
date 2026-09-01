@@ -14,11 +14,11 @@ resulting local MP3 to the agent for playback.
 - Supports speeds from `0.5` to `2.0`, defaulting to `1.0`.
 - Selects the language and voice on the server; client model and voice
   overrides are not accepted.
-- Downloads and validates the MP3 from the provider-issued signed URL.
+- Downloads and validates the MP3 from the signed audio URL.
 - Keeps tokens, input text, and signed URLs out of command output.
 
 Each request accepts up to 4,096 Unicode characters. VoiceFlow charges
-`$0.70 per 10,000` provider-reported billable characters.
+`$0.70 per 10,000` API-reported billable characters.
 
 ## Install as a Codex Skill
 
@@ -37,7 +37,7 @@ Use $read-aloud to read: It is a beautiful day to begin.
 ```
 
 Before every synthesis, the Skill discloses that the text will be sent to
-VoiceFlow and its Alibaba Cloud TTS provider and asks for approval for remote
+the VoiceFlow TTS service and asks for approval for remote
 processing and billing. No text is sent until the user explicitly agrees.
 
 Connect to VoiceFlow on first use:
@@ -55,16 +55,15 @@ printf 'Hello, world.' | node scripts/read-aloud.mjs --speed 1
 ```
 
 Successful output includes the local MP3 path, language, voice, and billed
-characters. It never includes the provider-signed URL.
+characters. It never includes the signed audio URL.
 
 ## Security and privacy
 
-- Text is sent only to the fixed VoiceFlow TTS API and its Alibaba Cloud TTS
-  provider.
+- Text is sent only to the fixed VoiceFlow TTS API.
 - The VoiceFlow token is never sent to the signed audio download URL.
 - Synthesis is not retried automatically, preventing duplicate cost after an
   uncertain response.
-- Audio downloads are limited to approved Alibaba Cloud Beijing result hosts,
+- Audio downloads are limited to trusted signed URLs returned by the TTS API,
   with redirects rejected.
 - Temporary MP3 files use private permissions, and explicit output paths never
   overwrite existing files.

@@ -13,10 +13,10 @@ Agent 播放。
 - 朗读用户提供的中文、英文或中英混合文字；
 - 支持 `0.5–2.0` 倍语速，默认 `1.0`；
 - 自动选择语言和音色，不接受客户端自定义模型或音色；
-- 下载并验证供应商签名 URL 返回的 MP3；
+- 下载并验证签名音频地址返回的 MP3；
 - 不在输出中暴露 Token、输入文字或签名 URL。
 
-单次最多输入 4,096 个 Unicode 字符。VoiceFlow 按供应商实际返回的计费字符数
+单次最多输入 4,096 个 Unicode 字符。VoiceFlow 按 TTS API 返回的计费字符数
 收费，用户价格为 `$0.70 / 10,000` 字符。
 
 ## 安装为 Codex Skill
@@ -34,7 +34,7 @@ git clone https://github.com/niuzb/read-aloud.git \
 使用 $read-aloud 朗读：今天是个适合出发的好日子。
 ```
 
-每次合成前，Skill 都会说明文字将发送到 VoiceFlow 和阿里云 TTS 服务，并询问
+每次合成前，Skill 都会说明文字将发送到 VoiceFlow TTS 服务，并询问
 是否同意远程处理和计费。只有用户明确同意后才会发送文字。
 
 首次使用需要连接 VoiceFlow：
@@ -51,14 +51,14 @@ node scripts/auth.mjs wait
 printf 'Hello, world.' | node scripts/read-aloud.mjs --speed 1
 ```
 
-成功后输出本地 MP3 路径、语言、音色和计费字符数，不输出供应商签名 URL。
+成功后输出本地 MP3 路径、语言、音色和计费字符数，不输出签名音频地址。
 
 ## 安全与隐私
 
-- 文字只发送到固定的 VoiceFlow TTS API 和其阿里云 TTS 服务商；
+- 文字只发送到固定的 VoiceFlow TTS API；
 - VoiceFlow Token 不会发送到音频下载地址；
 - 合成请求不自动重试，避免不确定响应造成重复费用；
-- 音频只允许从配置的阿里云北京结果域名下载，并拒绝重定向；
+- 音频只允许从 TTS API 返回的受信任签名地址下载，并拒绝重定向；
 - 临时 MP3 使用私有权限保存，指定输出文件时不会覆盖已有文件；
 - 完整 Token 保存在用户配置目录，不进入仓库、命令参数或日志。
 
