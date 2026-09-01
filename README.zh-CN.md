@@ -21,14 +21,14 @@ Agent 播放。
 
 ## 前提条件
 
-安装并使用本 Skill 前，需要：
+本机需要安装 Node.js 20 或更高版本。每次开始任务时，Skill 会检查
+`AUDIOFLOW_TOKEN` 环境变量或有效的本地凭据文件。只要任一凭据来源已经配置，
+就视为注册、充值和连接已经完成，不再重复提示这些步骤，直接开始任务。
 
-1. 在 [AudioFlow 注册页面](https://audioflow123.com/signup)创建账号；
-2. 登录后前往 [AudioFlow 账单页面](https://audioflow123.com/dashboard/billing)
-   充值预付余额；
-3. 本机已安装 Node.js 20 或更高版本。
-
-没有完成注册和充值时，无法调用文字朗读服务。
+如果没有凭据，Skill 才会引导用户前往
+[AudioFlow 注册页面](https://audioflow123.com/signup)和
+[AudioFlow 账单页面](https://audioflow123.com/dashboard/billing)，完成后再开始授权
+与合成。
 
 ## 安装为 Codex Skill
 
@@ -48,7 +48,7 @@ git clone https://github.com/niuzb/read-aloud.git \
 每次合成前，Skill 都会说明文字将发送到 AudioFlow TTS 服务，并询问
 是否同意远程处理和计费。只有用户明确同意后才会发送文字。
 
-首次使用需要连接 AudioFlow：
+只有初始状态检查返回 `not_connected` 时，才需要连接 AudioFlow：
 
 ```bash
 node scripts/auth.mjs status

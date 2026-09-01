@@ -22,16 +22,16 @@ Each request accepts up to 4,096 Unicode characters. AudioFlow charges
 
 ## Prerequisites
 
-Before installing and using this Skill:
+Install Node.js 20 or newer. At the start of a request, the Skill checks for an
+`AUDIOFLOW_TOKEN` environment variable or a valid stored credential file. If
+either credential source is already configured, it treats account registration
+and prepaid funding as complete and begins the task without showing those
+onboarding steps again.
 
-1. Create an account on the
-   [AudioFlow sign-up page](https://audioflow123.com/signup).
-2. Sign in and add prepaid credit on the
-   [AudioFlow billing page](https://audioflow123.com/dashboard/billing).
-3. Install Node.js 20 or newer on the local machine.
-
-Text-to-speech requests cannot be used until registration and prepaid funding
-are complete.
+When no credential exists, the Skill directs the user to the
+[AudioFlow sign-up page](https://audioflow123.com/signup) and
+[AudioFlow billing page](https://audioflow123.com/dashboard/billing) before
+starting authorization and synthesis.
 
 ## Install as a Codex Skill
 
@@ -52,7 +52,8 @@ Before every synthesis, the Skill discloses that the text will be sent to
 the AudioFlow TTS service and asks for approval for remote
 processing and billing. No text is sent until the user explicitly agrees.
 
-Connect to AudioFlow on first use:
+Connect to AudioFlow only when the initial status check reports
+`not_connected`:
 
 ```bash
 node scripts/auth.mjs status

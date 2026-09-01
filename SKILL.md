@@ -1,6 +1,6 @@
 ---
 name: read-aloud
-description: Turn user-provided text into a playable MP3 with AudioFlow TTS. Use when the user asks to read text aloud, speak or narrate a passage, or create playable speech from text. Do not use for transcription, translation, or audio editing unless separately requested.
+description: Turn user-provided text into a playable MP3 with AudioFlow TTS. Use when the user asks to read text aloud, speak or narrate a passage, or create playable speech from text. Skip account onboarding when an environment or stored credential is already configured. Do not use for transcription, translation, or audio editing unless separately requested.
 allowed-tools: Read,Write,Bash
 metadata:
   openclaw:
@@ -24,18 +24,29 @@ that local file playable in the host application. Do not rewrite, correct,
 translate, summarize, or otherwise change the text unless the user separately
 asks for that transformation before synthesis.
 
-## Prerequisites
+## Credential-aware onboarding
 
-Before using this skill, the user must:
+Resolve the directory containing this `SKILL.md` as `{baseDir}` and check the
+connection at the start of the request:
 
-1. create an account on the
-   [AudioFlow sign-up page](https://audioflow123.com/signup); and
-2. add prepaid credit on the
-   [AudioFlow billing page](https://audioflow123.com/dashboard/billing).
+```bash
+node "{baseDir}/scripts/auth.mjs" status
+```
 
-If either prerequisite is incomplete, direct the user to the relevant page and
-stop before authorization or synthesis. Do not request or handle their account
+If the status is `connected`, whether the source is the `AUDIOFLOW_TOKEN`
+environment variable or the stored credential file, treat account registration,
+prepaid funding, and credential setup as already completed. Do not show the
+sign-up or billing prerequisites, do not start browser authorization, and
+continue directly to the per-request approval and synthesis workflow.
+
+If the status is `not_connected`, tell the user to create an account on the
+[AudioFlow sign-up page](https://audioflow123.com/signup) and add prepaid credit
+on the [AudioFlow billing page](https://audioflow123.com/dashboard/billing), then
+follow the authorization flow below. Never request or handle their account
 password or payment credentials.
+
+An existing credential skips onboarding prompts, but it is not standing consent
+for remote processing or billing. Keep the per-request approval below.
 
 ## Require explicit approval
 
@@ -55,14 +66,15 @@ the synthesis command unless the user explicitly agrees for that request.
 
 ## Connect to AudioFlow
 
-Resolve the directory containing this `SKILL.md` as `{baseDir}`. Check the
-connection without printing the full token:
+Use the connection status already checked at the start of the request. Recheck
+it only if the credential state may have changed:
 
 ```bash
 node "{baseDir}/scripts/auth.mjs" status
 ```
 
-If the result is `not_connected`, begin browser authorization:
+If the result is `not_connected`, show the conditional account and
+prepaid-credit prerequisites above, then begin browser authorization:
 
 ```bash
 node "{baseDir}/scripts/auth.mjs" begin
@@ -137,5 +149,6 @@ diagnostics.
 
 ## Version
 
-Version 1.0.1: accept AudioFlow speech responses without a voice field, infer the
-fixed voice from the returned language, and keep the downloaded MP3 private.
+Version 1.0.2: skip repeated account and billing onboarding when an AudioFlow
+environment or stored credential already exists, while preserving per-request
+approval for remote synthesis and billing.

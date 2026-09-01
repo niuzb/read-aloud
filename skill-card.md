@@ -22,7 +22,7 @@ MIT-0
 
 Creators, developers, and general users can turn approved text into natural speech and play the generated MP3 in their agent application.
 
-An AudioFlow account with prepaid credit is required. Users register at the AudioFlow website and add credit before synthesis.
+An existing AudioFlow environment or stored credential skips account and billing onboarding. When neither credential source exists, users are directed to register and add credit before synthesis.
 
 ### Deployment Geography for Use:
 
@@ -60,7 +60,7 @@ Mitigation: Temporary audio uses private file permissions and is not copied, upl
 
 ## Skill Version(s):
 
-1.0.1 (ClawHub release)
+1.0.2 (ClawHub release)
 
 ## Ethical Considerations:
 
