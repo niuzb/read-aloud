@@ -60,7 +60,7 @@ Mitigation: Temporary audio uses private file permissions and is not copied, upl
 
 ## Skill Version(s):
 
-1.0.0 (ClawHub release)
+1.0.1 (ClawHub release)
 
 ## Ethical Considerations:
 

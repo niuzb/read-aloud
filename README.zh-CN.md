@@ -62,7 +62,8 @@ node scripts/auth.mjs wait
 printf 'Hello, world.' | node scripts/read-aloud.mjs --speed 1
 ```
 
-成功后输出本地 MP3 路径、语言、音色和计费字符数，不输出签名音频地址。
+成功后输出本地 MP3 路径、语言、本地推断的音色和计费字符数。AudioFlow
+响应本身不包含音色字段，命令输出也不会包含签名音频地址。
 
 ## 安全与隐私
 

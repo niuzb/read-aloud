@@ -66,8 +66,9 @@ For direct CLI use, provide text on standard input:
 printf 'Hello, world.' | node scripts/read-aloud.mjs --speed 1
 ```
 
-Successful output includes the local MP3 path, language, voice, and billed
-characters. It never includes the signed audio URL.
+Successful output includes the local MP3 path, language, locally inferred
+voice, and billed characters. The AudioFlow response does not expose the voice,
+and command output never includes the signed audio URL.
 
 ## Security and privacy
 

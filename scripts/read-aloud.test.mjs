@@ -28,8 +28,7 @@ function speechBody(overrides = {}) {
     expires_at: Math.floor(Date.now() / 1000) + 86_400,
     url: AUDIO_URL,
     format: "mp3",
-    language: "zh",
-    voice: "longanlingxin",
+    language: "en",
     usage: { characters: 8 },
     ...overrides,
   };
@@ -56,7 +55,7 @@ test("synthesizes once, validates the signed URL, and writes a private MP3", asy
   const calls = [];
   try {
     const result = await synthesizeAndDownload(
-      { text: "你好，世界", speed: 1.25, outputPath },
+      { text: "Hello world", speed: 1.25, outputPath },
       {
         credentialOptions: credentialOptions(root),
         fetchImpl: async (url, init) => {
@@ -84,7 +83,7 @@ test("synthesizes once, validates the signed URL, and writes a private MP3", asy
     assert.equal(calls[0].init.redirect, "error");
     assert.equal(calls[0].init.headers.authorization, `Bearer ${TOKEN}`);
     assert.deepEqual(JSON.parse(calls[0].init.body), {
-      input: "你好，世界",
+      input: "Hello world",
       speed: 1.25,
     });
     assert.equal(calls[1].url, AUDIO_URL);
@@ -93,7 +92,7 @@ test("synthesizes once, validates the signed URL, and writes a private MP3", asy
     assert.deepEqual(result, {
       path: outputPath,
       format: "mp3",
-      language: "zh",
+      language: "en",
       voice: "longanlingxin",
       characters: 8,
       expires_at: speechBody().expires_at,

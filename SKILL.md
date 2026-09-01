@@ -108,7 +108,8 @@ because an uncertain response may already have incurred a TTS charge.
 ## Play the result
 
 On success, the command prints JSON containing only the private local MP3 path,
-format, language category, selected voice, billed character count, and expiry.
+format, language category, locally inferred selected voice, billed character
+count, and expiry. The AudioFlow response does not expose a voice field.
 It never prints the signed audio URL or its query parameters.
 
 Use the host application's audio attachment or media rendering capability to
@@ -136,6 +137,5 @@ diagnostics.
 
 ## Version
 
-Version 1.0.1: use AudioFlow branding, require account registration and prepaid
-credit, and return a private, playable MP3 with automatic Chinese or English
-voice routing.
+Version 1.0.1: accept AudioFlow speech responses without a voice field, infer the
+fixed voice from the returned language, and keep the downloaded MP3 private.

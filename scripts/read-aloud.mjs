@@ -14,6 +14,10 @@ const MAXIMUM_TEXT_CHARACTERS = 4096;
 const MAXIMUM_STDIN_BYTES = 64 * 1024;
 const MAXIMUM_RESPONSE_BYTES = 64 * 1024;
 const MAXIMUM_AUDIO_BYTES = 32 * 1024 * 1024;
+const VOICE_BY_LANGUAGE = Object.freeze({
+  zh: "longanlingxin",
+  en: "longanlingxin",
+});
 const RESULT_HOSTS = new Set([
   "dashscope-result.oss-cn-beijing.aliyuncs.com",
   "dashscope-result-bj.oss-cn-beijing.aliyuncs.com",
@@ -109,18 +113,11 @@ function parseSpeechResponse(body) {
     body.object !== "audio.speech" ||
     body.format !== "mp3" ||
     (body.language !== "zh" && body.language !== "en") ||
-    (body.voice !== "longanlingxin" && body.voice !== "longanlufeng") ||
     !Number.isSafeInteger(body.expires_at) ||
     body.expires_at <= Math.floor(Date.now() / 1000) ||
     !Number.isSafeInteger(body.usage?.characters) ||
     body.usage.characters <= 0 ||
     typeof body.url !== "string"
-  ) {
-    throw new Error("The AudioFlow TTS response was invalid.");
-  }
-  if (
-    (body.language === "zh" && body.voice !== "longanlingxin") ||
-    (body.language === "en" && body.voice !== "longanlufeng")
   ) {
     throw new Error("The AudioFlow TTS response was invalid.");
   }
@@ -143,7 +140,7 @@ function parseSpeechResponse(body) {
   return Object.freeze({
     audioUrl,
     language: body.language,
-    voice: body.voice,
+    voice: VOICE_BY_LANGUAGE[body.language],
     characters: body.usage.characters,
     expiresAt: body.expires_at,
   });
